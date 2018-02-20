@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "devstart": "nodemon ./bin/www",
+    "format": "prettier --write '**/*.{js,jsx}'",
+    "lint": "eslint '**/*.{js,jsx}' --quiet"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -16,6 +18,14 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
-    "nodemon": "^1.15.1"
+    "eslint": "^4.18.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.6.1",
+    "nodemon": "^1.15.1",
+    "prettier": "^1.10.2"
   }
 }
