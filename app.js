@@ -10,6 +10,15 @@ const users = require('./routes/users');
 
 const app = express();
 
+//  Set up mongoose connection
+const mongoose = require('mongoose');
+
+const mongoDB = 'mongodb://testApp:test@localhost:27017/local_library';
+mongoose.connect(mongoDB);
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -33,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
