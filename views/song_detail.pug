@@ -1,0 +1,27 @@
+extends layout
+
+block content
+
+  h1 #{song.name}
+  p By #{song.artist}
+  a(href!=song.link) Listen to the song
+  iframe(width="560" height="315" src!=song.youtube frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+  div(style='margin-left:20px;margin-top:20px')
+  
+
+  form(method='POST' action='/song/' + song._id + '/upvote')
+    div.form-group
+      input#songid.form-control(type='hidden',name='songid', required='true', value=song._id ) 
+      button.btn.btn-primary(type='submit', class="glyphicon glyphicon-arrow-up")  Upvote
+      span &nbsp Upvotes: #{song.upvotes} &nbsp
+
+      
+
+  form(method='POST' action='/song/' + song._id + '/downvote')
+    div.form-group    
+      input#songid.form-control(type='hidden',name='songid', required='true', value=song._id )
+      button.btn.btn-primary(type='submit', , class="glyphicon glyphicon-arrow-down")  Downvote
+      span &nbsp Upvotes: #{song.downvotes}
+  hr
+  p
+    a(href=song.url+'/delete') Delete song

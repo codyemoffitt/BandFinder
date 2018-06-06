@@ -1,12 +1,9 @@
 #! /usr/bin/env node
 
-console.log(
-  'This script populates some Users to your database. Specified database as argument - e.g.: populatedb mongodb://your_username:your_password@your_dabase_url'
-);
-
 var async = require('async');
 
 var User = require('./models/user');
+var Song = require('./models/song');
 
 var mongoose = require('mongoose');
 const mongoDB = process.env.MONGODB_URI;
@@ -16,6 +13,7 @@ var db = mongoose.connection;
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var Users = [];
+var Songs = [];
 
 function UserCreate(first_name, family_name, d_birth, zipcode, instrument, cb) {
   Userdetail = { first_name: first_name, family_name: family_name };
@@ -33,6 +31,22 @@ function UserCreate(first_name, family_name, d_birth, zipcode, instrument, cb) {
     console.log('New User: ' + user);
     Users.push(user);
     cb(null, user);
+  });
+}
+
+function SongCreate(name, artist, link, cb) {
+  Songdetail = { name: name, artist: artist, link: link };
+
+  var song = new Song(Songdetail);
+
+  song.save(function(err) {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+    console.log('Song User: ' + song);
+    Songs.push(song);
+    cb(null, song);
   });
 }
 
@@ -54,8 +68,39 @@ function createUsers(cb) {
   );
 }
 
+function createSongs(cb) {
+  async.parallel(
+    [
+      function(callback) {
+        SongCreate('Use Me', 'Bill Withers', 'http://www.google.com', callback);
+      },
+      function(callback) {
+        SongCreate('Whats Going On', 'Marvin Gaye', 'http://www.google.com', callback);
+      },
+      function(callback) {
+        SongCreate('Hair of the Dog', 'Nazareth', 'http://www.google.com', callback);
+      }
+    ],
+    // optional callback
+    cb
+  );
+}
+
+// async.series(
+//   [createUsers],
+//   // Optional callback
+//   function(err, results) {
+//     if (err) {
+//       console.log('FINAL ERR: ' + err);
+//     } else {
+//     }
+//     // All done, disconnect from database
+//     mongoose.connection.close();
+//   }
+// );
+
 async.series(
-  [createUsers],
+  [createSongs],
   // Optional callback
   function(err, results) {
     if (err) {

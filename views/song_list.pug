@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+  each song in song_list
+    li 
+      a(href=song.url) #{song.name} 
+      | (#{song.artist})
+      ul
+        li(class="glyphicon glyphicon-arrow-up") Upvotes #{song.upvotes}
+        li(class="glyphicon glyphicon-arrow-down") Downvotes #{song.downvotes}
+
+  else
+    li There are no songs.
