@@ -9,22 +9,24 @@ var SongSchema = new Schema({
   artist: { type: String, required: true, max: 100 },
   link: { type: String, required: true, max: 100 },
   upvotes: { type: Number, required: false, default: 0 },
-  downvotes: { type: Number, required: false, default: 0 }
+  downvotes: { type: Number, required: false, default: 0 },
+  votes: [
+    {
+      id: { type: String, required: true },
+      displayName: { type: String, required: true },
+      value: { type: Number, required: true }
+    }
+  ]
 });
 
-// Virtual for author's URL
+// Virtual for song's URL
 SongSchema.virtual('url').get(function() {
-  return `/song/${this._id}`;
+  return `/songs/song/${this._id}`;
 });
 
 // Virtual for ranking
 SongSchema.virtual('rank').get(function() {
   return this.upvotes - this.downvotes;
-});
-
-// Virtual for decoded youtube
-SongSchema.virtual('youtube').get(function() {
-  return this.link.replace('watch', 'embed');
 });
 
 // Export model

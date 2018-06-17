@@ -3,3 +3,13 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+  if (!user)
+    a(href="/auth/google") Login with Google
+    br
+  if (user)
+    p Welcome #{user.profile.name.givenName}
+    a(href="/auth/google/logout") Logout
+    br
+
+

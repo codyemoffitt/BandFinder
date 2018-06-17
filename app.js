@@ -4,17 +4,34 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
+const passport = require('passport');
+const auth = require('./auth');
+var session = require('express-session');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const songs = require('./routes/songs');
+const authRoute = require('./routes/auth');
 
 const app = express();
+
+// Add session support
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'default_session_secret',
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+// Setup OAUTH
+auth(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 //  Set up mongoose connection
 const mongoose = require('mongoose');
 
-const mongoDB = process.env.MONGODB_URI; // || 'mongodb://testApp:test@localhost:27017/local_library';
+const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -35,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/songs', songs);
+app.use('/auth', authRoute);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

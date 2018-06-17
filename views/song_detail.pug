@@ -2,26 +2,46 @@ extends layout
 
 block content
 
-  h1 #{song.name}
-  p By #{song.artist}
-  a(href!=song.link) Listen to the song
-  iframe(width="560" height="315" src!=song.youtube frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
-  div(style='margin-left:20px;margin-top:20px')
+  div(class="row")
+    div(class="col-sm-12")
+      if currentVote 
+        if currentVote.value === 1
+          h1(class="glyphicon glyphicon-arrow-up upvote") #{song.name}
+        if currentVote.value === -1
+          h1(class="glyphicon glyphicon-arrow-down downvote") #{song.name}
+      if (!currentVote)
+        h1 #{song.name}
+  div(class="row")
+    p(class="col-sm-12") By #{song.artist}
+
+    
+
+ 
+
   
+  ul
+    each vote in song.votes
+      div(class="row")
+        if vote.value === 1
+          li(class="glyphicon glyphicon-arrow-up upvote col-sm-6") #{vote.displayName}
+        if vote.value === -1
+          li(class="glyphicon glyphicon-arrow-down downvote col-sm-6") #{vote.displayName}
 
-  form(method='POST' action='/song/' + song._id + '/upvote')
-    div.form-group
-      input#songid.form-control(type='hidden',name='songid', required='true', value=song._id ) 
-      button.btn.btn-primary(type='submit', class="glyphicon glyphicon-arrow-up")  Upvote
-      span &nbsp Upvotes: #{song.upvotes} &nbsp
+  
+  div(class="row")
+    div(class="col-sm-2")
+      form(method='POST' action='/songs/song/' + song._id + '/upvote')
+        div.form-group
+          input#songid.form-control(type='hidden',name='songid', required='true', value=song._id ) 
+          button.btn.btn-primary(type='submit', class="glyphicon glyphicon-arrow-up upvote-button")  Upvote
+    div(class="col-sm-2")
+      form(method='POST' action='/songs/song/' + song._id + '/downvote')
+        div.form-group    
+          input#songid.form-control(type='hidden',name='songid', required='true', value=song._id )
+          button.btn.btn-primary(type='submit', , class="glyphicon glyphicon-arrow-down downvote-button")  Downvote
 
-      
-
-  form(method='POST' action='/song/' + song._id + '/downvote')
-    div.form-group    
-      input#songid.form-control(type='hidden',name='songid', required='true', value=song._id )
-      button.btn.btn-primary(type='submit', , class="glyphicon glyphicon-arrow-down")  Downvote
-      span &nbsp Upvotes: #{song.downvotes}
+  hr 
+  a(href!=song.link) Listen to the song 
   hr
   p
     a(href=song.url+'/delete') Delete song

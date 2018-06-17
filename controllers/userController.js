@@ -6,27 +6,27 @@ const { sanitizeBody } = require('express-validator/filter');
 
 // Display list of all users.
 exports.user_list = function(req, res, next) {
-  if (typeof req.params.instrument == 'undefined') {
+  if (typeof req.params.instrument === 'undefined') {
     user
       .find()
       .sort([['family_name', 'ascending']])
-      .exec((err, list_users) => {
+      .exec((err, listUsers) => {
         if (err) {
           return next(err);
         }
         // Successful, so render
-        res.render('user_list', { title: 'User List', user_list: list_users });
+        res.render('user_list', { title: 'User List', user_list: listUsers });
       });
   } else {
     user
       .find({ instrument: req.params.instrument, zipcode: req.params.zipcode })
       .sort([['family_name', 'ascending']])
-      .exec((err, list_users) => {
+      .exec((err, listUsers) => {
         if (err) {
           return next(err);
         }
         // Successful, so render
-        res.render('user_list', { title: 'User List', user_list: list_users });
+        res.render('user_list', { title: 'User List', user_list: listUsers });
       });
   }
 };

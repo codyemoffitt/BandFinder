@@ -35,10 +35,20 @@ exports.song_detail = function(req, res, next) {
         err.status = 404;
         return next(err);
       }
+
+      //Determine vote status
+      var currentVote = null;
+      if (req.user) {
+        currentVote = results.song.votes.find(element => {
+          return element.id == req.user.profile.id;
+        });
+      }
+      console.log('Current Vote:', currentVote);
       // Successful, so render.
       res.render('song_detail', {
         title: 'Title',
-        song: results.song
+        song: results.song,
+        currentVote: currentVote
       });
     }
   );
@@ -203,13 +213,21 @@ exports.song_upvote_post = function(req, res, next) {
       // Success
       // Delete object and redirect to the list of songs.
       console.log(results);
-      Song.findByIdAndUpdate(req.body.songid, { upvotes: results.song.upvotes + 1 }, function(err) {
-        if (err) {
-          return next(err);
+      Song.findByIdAndUpdate(
+        req.body.songid,
+        {
+          $push: {
+            votes: { id: req.user.profile.id, displayName: req.user.profile.displayName, value: 1 }
+          }
+        },
+        function(err) {
+          if (err) {
+            return next(err);
+          }
+          // Success - go to song detail page
+          res.redirect(results.song.url);
         }
-        // Success - go to song detail page
-        res.redirect(results.song.url);
-      });
+      );
     }
   );
 };
@@ -256,15 +274,21 @@ exports.song_downvote_post = function(req, res, next) {
       // Success
       // Delete object and redirect to the list of songs.
       console.log(results);
-      Song.findByIdAndUpdate(req.body.songid, { downvotes: results.song.downvotes + 1 }, function(
-        err
-      ) {
-        if (err) {
-          return next(err);
+      Song.findByIdAndUpdate(
+        req.body.songid,
+        {
+          $push: {
+            votes: { id: req.user.profile.id, displayName: req.user.profile.displayName, value: -1 }
+          }
+        },
+        function(err) {
+          if (err) {
+            return next(err);
+          }
+          // Success - go to song detail page
+          res.redirect(results.song.url);
         }
-        // Success - go to song detail page
-        res.redirect(results.song.url);
-      });
+      );
     }
   );
 };
