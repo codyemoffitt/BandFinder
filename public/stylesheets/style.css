@@ -1,8 +1,9 @@
-body {
-  padding: 50px;
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+/* Navbar */
+.KOIcon {
+  border-radius: 4px;
+  height: 32px;
+  width: 32px;
 }
-
 .upvote {
   color: #008000;
 }
@@ -17,8 +18,4 @@ body {
 
 .downvote-button {
   background-color: #ff0000;
-}
-
-a {
-  color: #00b7ff;
 }

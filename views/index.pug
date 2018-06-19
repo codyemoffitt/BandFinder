@@ -1,11 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
 
   if (!user)
-    a(href="/auth/google") Login with Google
+    a(href="/auth/google") Please login with Google
     br
   if (user)
     p Welcome #{user.profile.name.givenName}

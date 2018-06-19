@@ -7,7 +7,7 @@ const router = express.Router();
 /* GET home page. */
 router.get('/', (req, res) => {
   console.log(req.user);
-  res.render('index', { title: 'Express', user: req.user });
+  res.render('index', { title: 'King Orange', user: req.user });
 });
 
 module.exports = router;
